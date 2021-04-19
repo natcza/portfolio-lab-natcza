@@ -1,0 +1,9 @@
+>>> from app1.models import Category, Institution, Donation
+>>> Category.objects.create(name='Category1')
+<Category: Category object (4)>
+>>> Category.objects.create(name='Category2')
+<Category: Category object (5)>
+>>> Category.objects.create(name='Category3')
+<Category: Category object (6)>
+
+
