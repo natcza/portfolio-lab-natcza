@@ -4,7 +4,6 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 User = get_user_model()
 
-
 class RegisterForm(forms.ModelForm):
     """
     The default

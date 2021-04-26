@@ -2,6 +2,10 @@ from django.db import models
 
 from django.conf import settings
 
+from django.contrib import admin
+
+from accounts.models import User
+
 DEFAULT_TYPE = 1
 TYPE_CHOICES = (
     (1, 'fundacja'),
@@ -11,8 +15,12 @@ TYPE_CHOICES = (
 
 
 class Category(models.Model):
-    '''Kategoria np'''
     name = models.CharField(max_length=255)
+
+    # class Meta:
+    #     verbose_name_plural = "Categories"
+    def __str__(self):
+        return self.name
 
 
 class Institution(models.Model):
@@ -20,6 +28,16 @@ class Institution(models.Model):
     description = models.TextField()
     type = models.IntegerField(choices=TYPE_CHOICES, default=DEFAULT_TYPE)
     categories = models.ManyToManyField(Category, related_name='institutions')
+
+    def __str__(self):
+        return self.name
+
+
+class InstitutionAdmin(admin.ModelAdmin):
+    fields = []
+
+
+admin.site.register(Institution, InstitutionAdmin)
 
 
 class Donation(models.Model):
@@ -34,4 +52,3 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField(blank=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
