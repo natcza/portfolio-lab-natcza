@@ -8,9 +8,11 @@ from django.http import JsonResponse
 from django.urls import reverse
 from .models import Donation, Institution, Category
 from .forms import RegisterUserForm, LoginUserForm
+
 # Create your views here.
 
 User = get_user_model()
+
 
 class LandingPageView(View):
     template_name = 'app1/index.html'
@@ -41,7 +43,7 @@ class LandingPageView(View):
             for _ in institution_get.categories.all():
                 category += str(_) + ', '
 
-            category = category[0: len(category)-2]
+            category = category[0: len(category) - 2]
             list_institutons.append({'name': name, 'description': description, 'category': category})
 
         # breakpoint()
@@ -88,10 +90,8 @@ class LandingPageView(View):
 class AddDonationView(View):
     template_name = 'app1/form.html'
 
-
     # breakpoint()
     def get(self, request, *args, **kwargs):
-
         categories = Category.objects.all()
         institutions = Institution.objects.all()
         # institutions_categories = Institution.objects.order_by(categories)
@@ -105,9 +105,9 @@ class AddDonationView(View):
 
     def post(self, request, *args, **kwargs):
         institution = request.POST.get('organization')
-        #wyjac z requesta talice idkow categorii
+        # wyjac z requesta talice idkow categorii
 
-        #pobrac z bazy kategorie o tych idkach
+        # pobrac z bazy kategorie o tych idkach
         post_data = {
             'quantity': request.POST.get('bags'),
             'institution': Institution.objects.get(pk=institution),
@@ -129,8 +129,11 @@ class AddDonationView(View):
         for id in categoriesIds:
             category = Category.objects.get(pk=id)
             donation.categories.add(category)
-        # return redirect('confirmation')
-        return JsonResponse({'url': reverse('add-donation')})
+        return redirect('confirmation')
+        # return JsonResponse({'url': reverse('add-donation')})  #confirmation
+        # return JsonResponse({'url': reverse('confirmation')})  # confirmation
+
+
 
 class LoginView(View):
     form_class = LoginUserForm
@@ -172,12 +175,12 @@ class LoginView(View):
             # jeśli False, to wyświetl komunikat
             message = "Uzupełnij poprawnie dane"
 
-
         context = {
             'form': form,
             'message': message,
         }
         return render(request, self.template_name, context)
+
 
 class LogoutView(View):
     # form_class = LoginUserForm
@@ -190,12 +193,12 @@ class LogoutView(View):
             return redirect('landing-page')
         # return render(request, self.template_name, ctx)
 
+
 class RegisterView(View):
     form_class = RegisterUserForm
     template_name = 'app1/register.html'
 
     def get(self, request, *args, **kwargs):
-
         ctx = {
             'form': self.form_class(),
 
@@ -203,7 +206,6 @@ class RegisterView(View):
         return render(request, self.template_name, ctx)
 
     def post(self, request, *args, **kwargs):
-
         form = self.form_class(request.POST)
 
         if form.is_valid():
@@ -216,25 +218,23 @@ class RegisterView(View):
                 last_name=cd['surname']
             )
 
-
             return redirect('login')
         ctx = {
 
-            }
+        }
         return render(request, self.template_name, ctx)
+
 
 class UserView(LoginRequiredMixin, View):
     template_name = 'app1/user.html'
 
     def get(self, request, *args, **kwargs):
-
         ctx = {}
         return render(request, self.template_name, ctx)
+
 
 class ConfirmationView(LoginRequiredMixin, View):
     template_name = 'app1/form-confirmation.html'
 
     def get(self, request, *args, **kwargs):
-
-        ctx = {}
-        return render(request, self.template_name, ctx)
+        return render(request, self.template_name)

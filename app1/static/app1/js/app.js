@@ -291,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function() {
       console.log(this.$form.getElementsByTagName('form'));
       console.log('++++');
 
-      fetch('/add_donation/', {
+      fetch('/confirmation/', {
         method: 'post',
         body: formData
       }).then(function (response) {
